@@ -1,0 +1,5 @@
+%syntax-version=1.0.0
+%project=importer
+
+merchants 2025-06-11T15:27:16Z jardila,,, <cannyedge34@gmail.com> # Create merchants table
+add_unique_index_to_merchants 2025-10-05T16:45:37Z jardila,,, <cannyedge34@gmail.com> # Add unique constraint on merchant_reference
