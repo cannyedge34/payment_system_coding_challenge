@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # --- Kafka and Zookeeper ---
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+  # --- Importer Database ---
+  importer_db:
+    image: postgres:15
+    container_name: importer_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres  # base por defecto
+    ports:
+      - "5432:5432"
+    volumes:
+      - importer_pgdata:/var/lib/postgresql/data
+      - ./scripts/init-importer-dbs.sh:/docker-entrypoint-initdb.d/init-dbs.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+  # --- Calculator Database ---
+  calculator_db:
+    image: postgres:15
+    container_name: calculator_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres  # base por defecto
+    ports:
+      - "5433:5432"
+    volumes:
+      - calculator_pgdata:/var/lib/postgresql/data
+      - ./scripts/init-calculator-dbs.sh:/docker-entrypoint-initdb.d/init-dbs.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+
+volumes:
+  importer_pgdata:
+  calculator_pgdata:

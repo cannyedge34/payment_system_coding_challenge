@@ -1,0 +1,13 @@
+
+/target
+**/target
+
+.env
+**/.env
+
+.DS_Store
+.idea
+*.swp
+*.swo
+*.log
+*.bak
