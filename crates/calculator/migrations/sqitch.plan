@@ -1,0 +1,4 @@
+%syntax-version=1.0.0
+%project=calculator
+
+create_merchants_table 2025-10-25T14:56:56Z jardila,,, <jardila@jardila> # Add merchants table for calculator
